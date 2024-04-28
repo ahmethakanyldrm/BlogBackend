@@ -1,8 +1,10 @@
 ﻿using Blog.API.Data;
 using Blog.API.Models.Domain;
 using Blog.API.Models.DTO;
+using Blog.API.Repositories.Implementation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Blog.API.Controllers
 {
@@ -11,11 +13,11 @@ namespace Blog.API.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private readonly ApplicationDbContext dbContext;
+        private readonly CategoryRepository categoryRepository;
 
-        public CategoriesController(ApplicationDbContext dbContext)
+        public CategoriesController(CategoryRepository categoryRepository)
         {
-            this.dbContext = dbContext;
+            this.categoryRepository = categoryRepository;
         }
         [HttpPost]
         public async Task<IActionResult> CreateCategory(CreateCategoryRequestDto request)
@@ -27,9 +29,11 @@ namespace Blog.API.Controllers
                 UrlHandle = request.UrlHandle
             };
 
-            await dbContext.AddAsync(category);
+            //await dbContext.AddAsync(category);
 
-            await dbContext.SaveChangesAsync();
+            //await dbContext.SaveChangesAsync();
+
+            await categoryRepository.CreateAsync(category);
 
             // Domain Model to dto
 
